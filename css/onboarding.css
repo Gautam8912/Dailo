@@ -1,0 +1,210 @@
+/* ==========================================================================
+   Food Express — onboarding.css
+   Branded splash shown while the app boots (session + categories + catalogue).
+   It disappears as soon as the app is ready — never on an artificial timer.
+   ========================================================================== */
+
+.fx-splash {
+  position: fixed;
+  inset: 0;
+  z-index: var(--fx-z-splash);
+  background: radial-gradient(120% 100% at 50% 0%, #ffffff 0%, #eef7f1 45%, #dff0e6 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--fx-space-6);
+  padding: var(--fx-space-6);
+  text-align: center;
+  transition: opacity 420ms var(--fx-ease), visibility 420ms var(--fx-ease);
+}
+.fx-splash.is-leaving { opacity: 0; visibility: hidden; pointer-events: none; }
+
+.fx-splash-brand { display: flex; flex-direction: column; align-items: center; gap: var(--fx-space-3); }
+.fx-splash-logo {
+  width: 76px;
+  height: 76px;
+  border-radius: 24px;
+  background: linear-gradient(140deg, var(--fx-primary-500), #35a06a);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  font-size: 38px;
+  box-shadow: 0 18px 40px rgba(31, 122, 76, 0.32);
+  animation: fxLogoFloat 3.2s var(--fx-ease) infinite;
+}
+@keyframes fxLogoFloat {
+  0%, 100% { transform: translateY(0) rotate(-2deg); }
+  50% { transform: translateY(-8px) rotate(2deg); }
+}
+.fx-splash-name {
+  font-family: var(--fx-font-display);
+  font-size: var(--fx-text-2xl);
+  font-weight: var(--fx-weight-bold);
+  letter-spacing: -0.02em;
+  color: var(--fx-ink);
+  margin: 0;
+}
+.fx-splash-name em { font-style: normal; color: var(--fx-primary-500); }
+.fx-splash-tag {
+  font-size: var(--fx-text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--fx-muted-2);
+  font-weight: var(--fx-weight-bold);
+  margin: 0;
+}
+
+/* Animated delivery scene */
+.fx-splash-scene {
+  position: relative;
+  width: min(340px, 84vw);
+  height: 96px;
+}
+.fx-splash-road {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 12px;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--fx-border-strong);
+  overflow: hidden;
+}
+.fx-splash-road::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(90deg, var(--fx-primary-300) 0 18px, transparent 18px 36px);
+  animation: fxRoad 0.9s linear infinite;
+}
+@keyframes fxRoad { from { transform: translateX(0); } to { transform: translateX(-36px); } }
+
+.fx-splash-scooter {
+  position: absolute;
+  bottom: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 46px;
+  line-height: 1;
+  animation: fxScooterBob 0.8s var(--fx-ease) infinite alternate;
+  filter: drop-shadow(0 6px 10px rgba(16, 33, 25, 0.18));
+}
+@keyframes fxScooterBob {
+  from { transform: translateX(-50%) translateY(0) rotate(-1.5deg); }
+  to { transform: translateX(-50%) translateY(-4px) rotate(1.5deg); }
+}
+.fx-splash-parcel {
+  position: absolute;
+  bottom: 46px;
+  font-size: 22px;
+  animation: fxParcel 2.4s var(--fx-ease) infinite;
+  opacity: 0;
+}
+.fx-splash-parcel:nth-of-type(1) { left: 22%; animation-delay: 0s; }
+.fx-splash-parcel:nth-of-type(2) { left: 50%; animation-delay: 0.8s; }
+.fx-splash-parcel:nth-of-type(3) { left: 74%; animation-delay: 1.6s; }
+@keyframes fxParcel {
+  0% { opacity: 0; transform: translateY(14px) scale(0.7); }
+  25% { opacity: 1; }
+  70% { opacity: 1; transform: translateY(-18px) scale(1); }
+  100% { opacity: 0; transform: translateY(-34px) scale(0.9); }
+}
+
+/* Rotating message */
+.fx-splash-msg {
+  min-height: 3.2em;
+  max-width: 46ch;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--fx-space-1);
+}
+.fx-splash-msg p {
+  margin: 0;
+  font-size: var(--fx-text-md);
+  color: var(--fx-ink-2);
+  font-weight: var(--fx-weight-medium);
+  line-height: 1.5;
+  animation: fxMsgIn 480ms var(--fx-ease);
+}
+.fx-splash-msg small { font-size: var(--fx-text-xs); color: var(--fx-muted-2); }
+@keyframes fxMsgIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+/* Progress */
+.fx-splash-progress { width: min(300px, 78vw); display: flex; flex-direction: column; gap: var(--fx-space-2); }
+.fx-splash-bar { height: 6px; border-radius: var(--fx-radius-pill); background: rgba(31, 122, 76, 0.14); overflow: hidden; }
+.fx-splash-bar > span {
+  display: block;
+  height: 100%;
+  width: 8%;
+  border-radius: var(--fx-radius-pill);
+  background: linear-gradient(90deg, var(--fx-primary-500), #46b57c);
+  transition: width 320ms var(--fx-ease);
+}
+.fx-splash-bar.is-indeterminate > span {
+  width: 34% !important;
+  animation: fxIndeterminate 1.15s var(--fx-ease) infinite;
+}
+@keyframes fxIndeterminate {
+  0% { transform: translateX(-110%); }
+  100% { transform: translateX(320%); }
+}
+.fx-splash-steps { display: flex; justify-content: space-between; font-size: 11px; color: var(--fx-muted-2); }
+.fx-splash-steps b { color: var(--fx-primary-600); font-weight: var(--fx-weight-semibold); }
+
+/* Error / retry state */
+.fx-splash-error {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--fx-space-3);
+  max-width: 42ch;
+}
+.fx-splash.is-error .fx-splash-error { display: flex; }
+.fx-splash.is-error .fx-splash-msg,
+.fx-splash.is-error .fx-splash-scene { display: none; }
+.fx-splash-error h2 { margin: 0; font-size: var(--fx-text-lg); }
+.fx-splash-error p { margin: 0; color: var(--fx-muted); font-size: var(--fx-text-sm); line-height: 1.6; }
+
+.fx-splash-foot {
+  position: absolute;
+  bottom: var(--fx-space-5);
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: var(--fx-text-xs);
+  color: var(--fx-muted-2);
+  padding: 0 var(--fx-space-5);
+}
+
+/* First-run welcome flow (location + preferences) */
+.fx-welcome-step { display: flex; flex-direction: column; gap: var(--fx-space-4); }
+.fx-welcome-step h3 { margin: 0; font-size: var(--fx-text-xl); }
+.fx-welcome-step p { margin: 0; color: var(--fx-muted); font-size: var(--fx-text-sm); }
+.fx-pref-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(132px, 1fr)); gap: var(--fx-space-3); }
+.fx-pref {
+  border: 1px solid var(--fx-border);
+  border-radius: var(--fx-radius-md);
+  padding: var(--fx-space-4) var(--fx-space-3);
+  background: var(--fx-surface);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  text-align: center;
+  font-size: var(--fx-text-sm);
+  font-weight: var(--fx-weight-medium);
+  transition: all var(--fx-fast) var(--fx-ease);
+}
+.fx-pref:hover { border-color: var(--fx-primary-300); background: var(--fx-primary-50); }
+.fx-pref[aria-pressed="true"] { border-color: var(--fx-primary-500); background: var(--fx-primary-50); color: var(--fx-primary-700); box-shadow: var(--fx-ring); }
+.fx-pref span:first-child { font-size: 24px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .fx-splash-logo,
+  .fx-splash-scooter,
+  .fx-splash-parcel,
+  .fx-splash-road::after { animation: none; }
+}
