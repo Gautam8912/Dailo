@@ -1,0 +1,302 @@
+{
+  "$comment": "Page manifest consumed by tools/build-pages.js. `out` files at the repo root are GENERATED from `src` fragments \u2014 edit the fragment, then run `npm run build:pages`.",
+  "pages": [
+    {
+      "out": "index.html",
+      "src": "src/pages/index.body.html",
+      "title": "Food Express \u2014 Groceries, Essentials & Restaurants Delivered",
+      "description": "Order groceries, fresh fruits and vegetables, daily essentials and restaurant meals from one app. Free delivery above \u20b9150. Demo build with a sample catalogue.",
+      "page": "home",
+      "attrs": {
+        "data-reload-on-location": "true"
+      },
+      "scripts": [
+        "js/pages/home.js",
+        "script.js"
+      ]
+    },
+    {
+      "out": "product.html",
+      "src": "src/pages/product.body.html",
+      "title": "Product details \u00b7 Food Express",
+      "description": "Product details, specifications, delivery estimate, related items and frequently bought together.",
+      "page": "product",
+      "scripts": [
+        "js/pages/product.js"
+      ]
+    },
+    {
+      "out": "category.html",
+      "src": "src/pages/category.body.html",
+      "title": "Categories \u00b7 Food Express",
+      "description": "Browse every Food Express category with filters, sorting and live availability.",
+      "page": "category",
+      "attrs": {
+        "data-reload-on-location": "true"
+      },
+      "scripts": [
+        "js/pages/category.js"
+      ]
+    },
+    {
+      "out": "search.html",
+      "src": "src/pages/search.body.html",
+      "title": "Search results \u00b7 Food Express",
+      "description": "Search the full catalogue and restaurant menus with filters, sorting and typo tolerance.",
+      "page": "search",
+      "scripts": [
+        "js/pages/search.js"
+      ]
+    },
+    {
+      "out": "restaurants.html",
+      "src": "src/pages/restaurants.body.html",
+      "title": "Restaurants near you \u00b7 Food Express",
+      "description": "Discover restaurants by cuisine, rating, delivery time and minimum order.",
+      "page": "restaurants",
+      "attrs": {
+        "data-reload-on-location": "true"
+      },
+      "scripts": [
+        "js/pages/restaurants.js"
+      ]
+    },
+    {
+      "out": "restaurant.html",
+      "src": "src/pages/restaurant.body.html",
+      "title": "Restaurant menu \u00b7 Food Express",
+      "description": "Browse the menu, customise dishes and add them to your cart.",
+      "page": "restaurant",
+      "scripts": [
+        "js/pages/restaurant.js"
+      ]
+    },
+    {
+      "out": "cart.html",
+      "src": "src/pages/cart.body.html",
+      "title": "Your cart \u00b7 Food Express",
+      "description": "Review cart items, unlock free delivery above \u20b9150, apply coupons and check out.",
+      "page": "cart",
+      "scripts": [
+        "js/pages/cart.js"
+      ]
+    },
+    {
+      "out": "checkout.html",
+      "src": "src/pages/checkout.body.html",
+      "title": "Checkout \u00b7 Food Express",
+      "description": "Confirm address, review items, apply offers, choose a payment method and place the order.",
+      "page": "checkout",
+      "scripts": [
+        "js/pages/checkout.js"
+      ]
+    },
+    {
+      "out": "order-success.html",
+      "src": "src/pages/order-success.body.html",
+      "title": "Order confirmed \u00b7 Food Express",
+      "description": "Order confirmation with the full bill breakdown and delivery estimate.",
+      "page": "order-success",
+      "scripts": [
+        "js/pages/order-success.js"
+      ]
+    },
+    {
+      "out": "orders.html",
+      "src": "src/pages/orders.body.html",
+      "title": "Your orders \u00b7 Food Express",
+      "description": "Order history with status, totals, reorder and tracking.",
+      "page": "orders",
+      "protected": "user",
+      "scripts": [
+        "js/pages/orders.js"
+      ]
+    },
+    {
+      "out": "order.html",
+      "src": "src/pages/order.body.html",
+      "title": "Order details & tracking \u00b7 Food Express",
+      "description": "Track an order, view the bill breakdown, cancel when permitted or reorder.",
+      "page": "order",
+      "protected": "user",
+      "scripts": [
+        "js/pages/order.js"
+      ]
+    },
+    {
+      "out": "wishlist.html",
+      "src": "src/pages/wishlist.body.html",
+      "title": "Wishlist \u00b7 Food Express",
+      "description": "Saved products and dishes, ready to move to your cart.",
+      "page": "wishlist",
+      "scripts": [
+        "js/pages/wishlist.js"
+      ]
+    },
+    {
+      "out": "account.html",
+      "src": "src/pages/account.body.html",
+      "title": "My account \u00b7 Food Express",
+      "description": "Profile, addresses, orders, wishlist, payments, coupons, rewards, notifications and privacy settings.",
+      "page": "account",
+      "protected": "user",
+      "scripts": [
+        "js/pages/account.js"
+      ]
+    },
+    {
+      "out": "login.html",
+      "src": "src/pages/login.body.html",
+      "title": "Login \u00b7 Food Express",
+      "description": "Sign in with email or mobile number and password.",
+      "page": "login",
+      "chrome": "none",
+      "attrs": {
+        "data-splash": "never"
+      },
+      "scripts": [
+        "js/pages/auth.js"
+      ]
+    },
+    {
+      "out": "register.html",
+      "src": "src/pages/register.body.html",
+      "title": "Create account \u00b7 Food Express",
+      "description": "Register with your name, email, mobile number and a password.",
+      "page": "register",
+      "chrome": "none",
+      "attrs": {
+        "data-splash": "never"
+      },
+      "scripts": [
+        "js/pages/auth.js"
+      ]
+    },
+    {
+      "out": "forgot-password.html",
+      "src": "src/pages/forgot-password.body.html",
+      "title": "Reset password \u00b7 Food Express",
+      "description": "Request a password reset and set a new password.",
+      "page": "forgot-password",
+      "chrome": "none",
+      "attrs": {
+        "data-splash": "never"
+      },
+      "scripts": [
+        "js/pages/auth.js"
+      ]
+    },
+    {
+      "out": "notifications.html",
+      "src": "src/pages/notifications.body.html",
+      "title": "Notifications \u00b7 Food Express",
+      "description": "Order updates, offers and account notifications with read/unread state.",
+      "page": "notifications",
+      "protected": "user",
+      "scripts": [
+        "js/pages/notifications.js"
+      ]
+    },
+    {
+      "out": "support.html",
+      "src": "src/pages/support.body.html",
+      "title": "Help centre \u00b7 Food Express",
+      "description": "FAQs, order and delivery help, refund information and a support contact form.",
+      "page": "support",
+      "scripts": [
+        "js/pages/support.js"
+      ]
+    },
+    {
+      "out": "faq.html",
+      "src": "src/pages/faq.body.html",
+      "title": "FAQs \u00b7 Food Express",
+      "description": "Answers about delivery, the \u20b9150 free-delivery threshold, coupons, payments and returns.",
+      "page": "faq",
+      "scripts": [
+        "js/pages/support.js"
+      ]
+    },
+    {
+      "out": "about.html",
+      "src": "src/pages/about.body.html",
+      "title": "About us \u00b7 Food Express",
+      "description": "What Food Express is, how it is built and what is demo data.",
+      "page": "about",
+      "scripts": [
+        "js/pages/static.js"
+      ]
+    },
+    {
+      "out": "contact.html",
+      "src": "src/pages/contact.body.html",
+      "title": "Contact us \u00b7 Food Express",
+      "description": "Support channels and a contact form.",
+      "page": "contact",
+      "scripts": [
+        "js/pages/static.js"
+      ]
+    },
+    {
+      "out": "privacy.html",
+      "src": "src/pages/privacy.body.html",
+      "title": "Privacy policy \u00b7 Food Express",
+      "description": "Draft privacy policy for the Food Express demo build.",
+      "page": "privacy",
+      "scripts": [
+        "js/pages/static.js"
+      ]
+    },
+    {
+      "out": "terms.html",
+      "src": "src/pages/terms.body.html",
+      "title": "Terms & conditions \u00b7 Food Express",
+      "description": "Draft terms and conditions for the Food Express demo build.",
+      "page": "terms",
+      "scripts": [
+        "js/pages/static.js"
+      ]
+    },
+    {
+      "out": "shipping.html",
+      "src": "src/pages/shipping.body.html",
+      "title": "Shipping & delivery policy \u00b7 Food Express",
+      "description": "Delivery coverage, estimates, fees and the free-delivery threshold.",
+      "page": "shipping",
+      "scripts": [
+        "js/pages/static.js"
+      ]
+    },
+    {
+      "out": "refunds.html",
+      "src": "src/pages/refunds.body.html",
+      "title": "Cancellation & refund policy \u00b7 Food Express",
+      "description": "How to cancel an order and how refunds work.",
+      "page": "refunds",
+      "scripts": [
+        "js/pages/static.js"
+      ]
+    },
+    {
+      "out": "admin.html",
+      "src": "src/pages/admin.body.html",
+      "title": "Admin dashboard \u00b7 Food Express",
+      "description": "Protected admin area: products, categories, inventory, restaurants, orders, coupons, zones and settings.",
+      "page": "admin",
+      "protected": "admin",
+      "scripts": [
+        "js/pages/admin.js"
+      ]
+    },
+    {
+      "out": "404.html",
+      "src": "src/pages/404.body.html",
+      "title": "Page not found \u00b7 Food Express",
+      "description": "That page could not be found.",
+      "page": "404",
+      "scripts": [
+        "js/pages/static.js"
+      ]
+    }
+  ]
+}

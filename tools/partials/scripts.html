@@ -1,0 +1,25 @@
+<!-- Shared runtime: data layer → services → UI → components → bootstrap → page controller.
+     Order matters; every file uses `defer` so they download in parallel and execute in order. -->
+<script defer src="shared/constants.js"></script>
+<script defer src="shared/settings.js"></script>
+<script defer src="shared/locations.js"></script>
+<script defer src="shared/catalog.js"></script>
+<script defer src="shared/restaurants.js"></script>
+<script defer src="shared/coupons.js"></script>
+<script defer src="shared/content.js"></script>
+<script defer src="shared/pricing.js"></script>
+<script defer src="js/config.js"></script>
+<script defer src="js/utils.js"></script>
+<script defer src="js/media.js"></script>
+<script defer src="js/api.js"></script>
+<script defer src="js/backend-integration.js"></script>
+<script defer src="js/store.js"></script>
+<script defer src="js/ui.js"></script>
+<script defer src="js/components/header.js"></script>
+<script defer src="js/components/footer.js"></script>
+<script defer src="js/components/bottom-nav.js"></script>
+<script defer src="js/components/location-modal.js"></script>
+<script defer src="js/components/cart-drawer.js"></script>
+<script defer src="js/components/listing.js"></script>
+<script defer src="js/app.js"></script>
+{{PAGE_SCRIPTS}}

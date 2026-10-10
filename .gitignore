@@ -1,0 +1,30 @@
+# Dependencies
+node_modules/
+backend/node_modules/
+
+# Environment & secrets — never commit these
+.env
+.env.*
+!.env.example
+backend/.env
+backend/.env.*
+!backend/.env.example
+*.pem
+*.key
+serviceAccountKey*.json
+
+# Logs & temp
+*.log
+npm-debug.log*
+.DS_Store
+Thumbs.db
+/tmp/
+
+# Build output that is not part of the deliverable
+coverage/
+.nyc_output/
+
+# Editor
+.idea/
+.vscode/
+*.swp
