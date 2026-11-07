@@ -28,3 +28,6 @@ coverage/
 .idea/
 .vscode/
 *.swp
+
+# Downloadable build artifact (generated, not part of the source tree)
+/hiretrail-job-tracker.zip
