@@ -5,8 +5,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 
-const FALLBACK_IMAGE =
-  'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=600';
+const FALLBACK_IMAGE = '/images/food-placeholder.jpg';
 
 const PAYMENT_METHODS = [
   { value: 'Cash on Delivery', label: '💵 Cash on Delivery' },

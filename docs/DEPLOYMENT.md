@@ -115,3 +115,24 @@ deployment stays a simple static build.
 - [ ] Logout → visiting `/orders` redirects to login; visiting `/admin` redirects to admin login.
 - [ ] `dist/` is **not** committed (it is in `.gitignore`).
 - [ ] `node_modules/` is not committed.
+
+---
+
+## 8. What is inside `public/`
+
+Vite copies everything in `public/` to the root of `dist/` untouched, so these
+URLs work exactly like normal files on the deployed site:
+
+| File | Used as |
+| --- | --- |
+| `public/favicon.svg` | browser tab icon (`<link rel="icon">` in `index.html`) |
+| `public/images/food-placeholder.jpg` | local fallback image for food cards when a photo fails |
+| `public/robots.txt` | crawler rules for the demo |
+
+If you add your own product photos, put them in `public/images/` and reference them
+as `/images/your-photo.jpg`. They will be included in the build automatically — no
+import statement is needed for `public/` files.
+
+> Note: the 66 demo dishes use remote Unsplash URLs (identical to the original
+> project). The bundled placeholder guarantees the design still looks correct
+> offline, e.g. during a viva with no Wi-Fi.

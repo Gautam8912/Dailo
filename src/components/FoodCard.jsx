@@ -3,8 +3,9 @@
 
 import { useApp } from '../context/AppContext';
 
-const FALLBACK_IMAGE =
-  'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=600';
+// Bundled in public/images/ so the card still looks right when a remote
+// photo fails to load (e.g. no internet during the demo).
+const FALLBACK_IMAGE = '/images/food-placeholder.jpg';
 
 export default function FoodCard({ food }) {
   const { addToCart } = useApp();

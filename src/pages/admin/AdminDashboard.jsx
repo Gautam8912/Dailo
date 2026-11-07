@@ -537,6 +537,9 @@ export default function AdminDashboard() {
                           <img
                             src={food.image}
                             alt={food.name}
+                            onError={(event) => {
+                              event.currentTarget.src = '/images/food-placeholder.jpg';
+                            }}
                             style={{
                               width: '50px',
                               height: '40px',

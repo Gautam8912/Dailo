@@ -59,6 +59,11 @@ CSS. Your optional Express backend is still in `backend/`.
 ```
 Dailo/
 ├── index.html                  ← Vite entry, contains <div id="root">
+├── public/                     ← static files copied as-is into dist/
+│   ├── favicon.svg
+│   ├── robots.txt
+│   └── images/
+│       └── food-placeholder.jpg   ← local fallback image for food cards
 ├── vite.config.js              ← Vite + React plugin
 ├── vercel.json                 ← SPA rewrite so /cart works on Vercel
 ├── package.json
@@ -159,6 +164,16 @@ localStorage keys used by the app:
 > backend hashes them (`backend/` already does this with bcrypt).
 
 To reset the demo, open DevTools → Application → Local Storage → delete the `fx_*` keys.
+
+### About the food images
+
+The 66 dishes point at the same **Unsplash** photo URLs the original project used
+(45 unique photos), so the pictures need an internet connection the first time.
+If a photo ever fails to load, `FoodCard` swaps in the **bundled**
+`public/images/food-placeholder.jpg` instead of showing a broken image — that file
+is part of this project, so no page is ever blank. To use your own photos, drop
+them in `public/images/` and change the `image` field in `src/data/foods.js` or use
+the admin panel's **Image URL** field.
 
 ---
 

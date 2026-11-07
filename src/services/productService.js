@@ -7,8 +7,7 @@
 import { seedFoods } from '../data/foods';
 import { read, write, STORAGE_KEYS } from './storage';
 
-const FALLBACK_IMAGE =
-  'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=600';
+const FALLBACK_IMAGE = '/images/food-placeholder.jpg';
 
 function load() {
   const saved = read(STORAGE_KEYS.foods, null);

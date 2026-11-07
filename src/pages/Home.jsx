@@ -80,6 +80,9 @@ export default function Home() {
             <img
               src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=600&auto=format&fit=crop&q=80"
               alt="Delicious Food"
+              onError={(event) => {
+                event.currentTarget.src = '/images/food-placeholder.jpg';
+              }}
             />
             <div className="floating-card card-1">
               🍕 Pizza Delivered <span style={{ color: '#16a34a' }}>●</span>
