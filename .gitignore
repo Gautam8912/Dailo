@@ -31,3 +31,5 @@ coverage/
 
 # Downloadable build artifact (generated, not part of the source tree)
 /hiretrail-job-tracker*.zip
+# ...except the published download copy
+!downloads/hiretrail-job-tracker.zip
