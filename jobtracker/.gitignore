@@ -1,0 +1,7 @@
+node_modules/
+dist/
+qa/.bundle.mjs
+test-results/
+playwright-report/
+*.log
+.DS_Store
