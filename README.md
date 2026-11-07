@@ -1,327 +1,227 @@
-# Food Express
+# 🍔 Food Express — React + Vite
 
-A premium, fully responsive **multi-category delivery and shopping platform**: groceries,
-fruits & vegetables, dairy, snacks, personal care, beauty, household supplies, electronics,
-stationery, pet supplies **and** restaurant food — one catalogue, one cart, one checkout,
-one order-tracking and account experience.
+A food ordering website with **two modules in one project**:
 
-Built as plain HTML, CSS and vanilla JavaScript (no framework, no bundler, no build step
-needed to run it) with an optional Node/Express + MongoDB API for persistence. It runs
-**fully offline in demo mode** and switches to the API when one is available.
+| Module | Pages | Who can open it |
+| --- | --- | --- |
+| **User** | Home, Cart, Orders, Profile, Login, Signup, Forgot Password | everyone |
+| **Admin** | Admin Login, Admin Dashboard (products / orders / users) | only `role === "admin"` |
 
-```bash
-npm start          # http://localhost:4173 — the complete storefront, zero dependencies
-npm test           # 81 tests (page smoke, acceptance flows, backend services, HTTP contract)
-```
-
----
-
-## Contents
-
-- [Quick start](#quick-start)
-- [What is implemented](#what-is-implemented)
-- [What is simulated (and says so)](#what-is-simulated-and-says-so)
-- [Project structure](#project-structure)
-- [Architecture](#architecture)
-- [Configuration](#configuration)
-- [Demo accounts](#demo-accounts)
-- [Scripts](#scripts)
-- [Testing](#testing)
-- [Backend & environment](#backend--environment)
-- [Documentation](#documentation)
-- [Security notes](#security-notes)
-
----
-
-## Quick start
-
-**Storefront only (nothing to install):**
-
-```bash
-node tools/serve.js          # or: npm start
-open http://localhost:4173
-```
-
-`tools/serve.js` binds `0.0.0.0`, serves the generated pages, returns real 404s, and
-proxies `/api/*` to the backend when one is running. With no backend it answers
-`503 DATABASE_UNAVAILABLE` honestly and the storefront keeps working in demo mode.
-
-**With the API:**
+Built with **React + Vite**, the same **CSS, colours and layout** as the original
+HTML/CSS/JS version, and **localStorage** for all data — so it runs with no
+database and is easy to explain in a viva.
 
 ```bash
 npm install
-cp backend/.env.example backend/.env   # set MONGO_URI + JWT_SECRET
-npm run seed                           # seeds MongoDB from shared/
-npm run backend                        # http://localhost:5000/api/health
-```
-
-Then set `USE_BACKEND = true` in `js/config.js`. The header pill changes from
-**Demo data** to **Backend connected**.
-
----
-
-## What is implemented
-
-**Discovery & merchandising**
-- Onboarding splash with rotating messages and real progress (first load only — never an artificial timer), plus a 3-step welcome flow (city → preferences → categories) that overlays an already-rendered page
-- Header with city/address selector, live search suggestions + recent terms, wishlist/notification/cart badges, account menu
-- Promo carousel, quick-category grid, and 15 home sections: Best Sellers, Popular Near You, Trending, Today's Deals, Under ₹99, Fresh Arrivals, Seasonal, Daily Essentials, Fresh Produce, Recommended, Reorder Favourites, Recently Viewed, Top Restaurants, Featured Brands, Frequently Bought Together
-- **177 products** across 15 categories and 39 brands, plus **12 restaurants** with **98 menu items**
-
-**Product & restaurant pages**
-- Product details: gallery, price/MRP/discount, unit, stock, ETA, description, specs, quantity selector, Add to Cart (exactly +1; a second click makes qty 2 — never a duplicate line), related and frequently-bought-together rails
-- Restaurant discovery with cuisine/city/veg filters, menus grouped by section, veg/non-veg marks, customisation groups (including multiplier options like half portions), per-restaurant minimum order and packing charge, and the **one-restaurant-per-cart** rule with a clear switch prompt
-
-**Cart & pricing**
-- Smart cart with a configurable free-delivery threshold: live "₹X more for free delivery", progress bar, per-amount messaging, remove, save for later, coupon, tip, loyalty redemption
-- Full bill breakdown: item savings, auto offers, coupon, loyalty, delivery, packing, small-order, surge, tip, GST-inclusive note, grand total
-- Guest and signed-in persistence; guest carts **merge** on sign-in (quantities combine, they are never duplicated)
-
-**Checkout, orders & tracking**
-- Multi-step checkout: address (saved or new, with serviceability warnings), delivery slot, payment method, review with the complete bill, place order
-- Duplicate-order prevention via an idempotency key
-- Order tracking: Placed → Confirmed → Packing/Preparing → Out for delivery → Delivered, with a timestamped history, invoice, reorder, print, cancel (while cancellable), and clearly labelled simulated progression
-- Order history with status filters, search, stats and one-tap reorder
-
-**Accounts**
-- Register / sign in / forgot password with show-hide toggles, field-level validation, password strength, and no fake success messages
-- Account area: profile, address book with default, orders, wishlist, coupons wallet with live eligibility, rewards balance + tiers + point history, preferences, security (change password, sessions), privacy & data (export JSON, clear history, delete local data)
-- Notification centre with kind filters, unread state, deep links, mark read/clear
-
-**Admin dashboard** (role-gated)
-- Overview & analytics, orders (status changes, cancellation), products (inline price/stock/visibility + full editor + create), inventory (low/out of stock, bulk restock, catalogue reset), restaurants & menus, coupons, cities & coverage, users, and business settings — including the **free-delivery threshold, delivery fee, packing fee, loyalty rules and feature flags**
-
-**Platform quality**
-- Global search with typo tolerance, suggestions, history, filters (category, price, brand, availability, discount) and sorts (popularity, price asc/desc, newest, rating, discount)
-- Performance: lazy images, skeletons for every async surface, debounced search, pagination, no external asset requests
-- Accessibility: semantic landmarks, skip link, keyboard operability, focus management in modals/drawers, labelled controls, live regions, `aria-invalid` field errors, reduced-motion support
-- 27 pages, all generated from fragments so shell markup can never drift
-
----
-
-## What is simulated (and says so)
-
-This build is explicit about the line between implemented behaviour and simulation —
-in the UI, in the API (`GET /api/health → data.capabilities`) and in
-[`docs/SIMULATION_AND_HONESTY.md`](docs/SIMULATION_AND_HONESTY.md):
-
-| Area | Reality |
-| --- | --- |
-| Payments | **No gateway.** `demo` is recorded as paid with a "simulated, no money moved" note; COD stays pending; UPI/card are refused until server-side verification exists |
-| Refunds | Marked as simulated on cancellation of a paid order |
-| Order progress | Simulated transitions (customer control, admin dropdown, `POST /orders/:id/simulate`), flagged on every order |
-| Delivery tracking & ETA | Computed from seeded city + handling minutes; no live GPS or courier network |
-| Ratings & reviews | Seeded merchandising values, labelled demo; `reviewCount` is always 0 and no review system exists |
-| Coupons & promotions | Seeded sample offers flagged `demo: true` |
-| Cities | Configured coverage (`demo-full`, `demo-limited`, `coming-soon`); coming-soon cities **block checkout** — no claim of live delivery everywhere |
-| Support & contact | Tickets are stored and listed; no inbox, mailbox, phone line or chat is staffed |
-| Password reset email | No SMTP configured, so the code is returned and rendered as a labelled demo reset |
-| Imagery | Locally generated SVG placeholders — no hotlinked or broken images |
-| Legal pages | Draft business content, not reviewed by counsel |
-
----
-
-## Project structure
-
-```
-index.html … 404.html     27 generated pages (edit src/pages/*.body.html instead)
-src/pages/                page body fragments (one per page)
-css/                      theme.css · components.css · layout.css · pages.css · onboarding.css
-shared/                   single source of truth (UMD — browser and Node)
-  constants.js settings.js locations.js catalog.js restaurants.js
-  coupons.js pricing.js content.js
-js/
-  config.js               runtime config: API_URL, USE_BACKEND, limits, routes, demo credentials
-  utils.js  media.js      DOM/format/validation helpers · generated imagery      → FX.u, FX.media
-  api.js  backend-integration.js  HTTP client + endpoint adapters                → FX.api, FX.backend
-  store.js                state, cart, auth, addresses, orders, rewards, admin   → FX.store
-  ui.js                   reusable UI kit                                        → FX.ui
-  app.js                  boot sequence, splash, guards, page lifecycle          → FX.app
-  components/             header, footer, bottom-nav, location-modal, cart-drawer, listing
-  pages/                  one controller per page
-script.js                 root compatibility shim (legacy globals, FX.ready, FX.debug)
-backend/
-  src/config/             env validation, MongoDB connection
-  src/models/             User, Address, Product, Category, Restaurant, Coupon, Order, Cart, Wishlist, Notification, SupportTicket, AppSetting
-  src/services/           shared bridge, settings, catalog, pricing, orders, auth, payments, notifications
-  src/middleware/         auth (protect/requireRole), error envelope, rate limits, dbGuard
-  src/routes/             /api/* — matches js/backend-integration.js exactly
-  src/app.js server.js    app assembly · entry point
-  seed/seed.js            seeds MongoDB from shared/
-  tests/                  service + HTTP contract tests (no MongoDB needed)
-tools/
-  build-pages.js          assembles root HTML from fragments + pages.json
-  audit-api.js            static check that every FX.* member used actually exists
-  serve.js                dependency-free dev server with /api proxy
-  partials/               shell + script templates
-tests/                    jsdom page smoke tests + acceptance flow tests + harness
-docs/                     architecture, API, data model, admin guide, deployment, testing, components, honesty
+npm run dev        # http://localhost:5173
+npm run build      # production build → dist/
 ```
 
 ---
 
-## Architecture
-
-```
-shared/  ────────────────► js/ (storefront)     vanilla JS, localStorage in demo mode
-   │                     ► backend/ (Express + Mongoose)   persistence & enforcement
-   └── one pricing engine, one settings object, one seed catalogue
-```
-
-Both sides call `FX.pricing.computeCart`, so the storefront and the API can never
-disagree about money — a test asserts the two entry points return identical totals.
-
-**Page contract**
-
-```html
-<body data-page="home" data-protected="user" data-chrome="none"
-      data-splash="never" data-reload-on-location="true">
-```
-
-`data-page` selects `FX.pages[name].render()`; `data-protected` drives the guards
-(`user` → redirect guests to sign-in with `?next=`; `admin` → visible
-"Access restricted" state); `data-chrome="none"` skips the shared header/footer for
-full-bleed pages.
-
-**Boot order** — error boundary → splash (first load only) → store boot (restore,
-seed, session, API probe) → chrome → guards → page controllers render → the welcome
-overlay opens on top of the finished page.
-
-Full details: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
-
----
-
-## Configuration
-
-Business rules live in `shared/settings.js` (`DEFAULT_SETTINGS`) and are editable at
-runtime from **Admin → Business settings** — never hard-coded in a page:
-
-| Setting | Default | Notes |
-| --- | --- | --- |
-| `freeDeliveryThreshold` | **150** | compared against the *eligible merchandise subtotal* (tips/fees excluded) |
-| `deliveryFee` | 29 | waived at/above the threshold; per-city overrides win |
-| `packingFee` | 20 | restaurant orders |
-| `smallOrderFee` / `smallOrderFeeBelow` | 0 / 0 | optional floor fee |
-| `minOrderValue`, `maxQuantityPerItem` | 0, 10 | cart rules |
-| `lowStockThreshold` | 10 | inventory alerts |
-| `loyalty` | earn 5%, ₹0.25/point, min 100, cap 30% | redemption + accrual |
-| `taxInclusive`, `defaultGstRate` | true, 18% | GST-inclusive pricing (Indian MRP convention) |
-| `tipOptions`, `surgeFee`, `autoOffers` | [0,10,20,30], 0, 2 offers | checkout extras |
-| `cityCoverage`, `cityDeliveryFee` | `{}` | admin per-city overrides |
-| `features` | flags | guest checkout, demo/COD/UPI/card/wallet, GPS tracking, reviews, referrals |
-
-`js/config.js` holds runtime switches: `API_URL` (`/api`), `USE_BACKEND`,
-`backendProbeTimeoutMs`, `pageSize`, `searchDebounceMs`, `maxSearchHistory`,
-`maxRecentlyViewed`, onboarding copy and the seeded demo credentials.
-
----
-
-## Demo accounts
+## 1. Demo login details
 
 | Role | Email | Password |
 | --- | --- | --- |
-| Admin | `admin@foodexpress.com` | `admin123` |
-| Customer | `user@test.com` | `user123` |
+| **Admin** | `admin@foodexpress.com` | `admin123` |
+| **Customer** | create one on the Signup page | your choice (min 6 chars) |
 
-Sign-in pages offer a one-click **Fill** for both, clearly labelled as local demo
-accounts. In demo mode they are stored in `localStorage` as salted SHA-256 hashes;
-in backend mode they are bcrypt hashes created by `npm run seed`. Change or disable
-them (`SEED_DEMO_ACCOUNTS=false`) before deploying anywhere public.
+* Customer login → `/login`
+* Admin login → `/admin/login` (or use `/login` with the admin email — it redirects to the dashboard)
 
 ---
 
-## Scripts
+## 2. What changed from the old version
+
+The design idea, colours, fonts, product list and all screens were **kept**.
+Only the *plumbing* changed: hand-written DOM code became React components.
+
+| Old (HTML + CSS + JS) | New (React + Vite) |
+| --- | --- |
+| 8 separate `.html` files | 1 `index.html` + React pages (`src/pages`) |
+| `getElementById(...).innerHTML = "..."` | JSX + state (`useState`) |
+| global `let currentCategory`, `currentSearch` | `useState` inside `Home.jsx` |
+| `onclick="addToCart(1)"` in HTML strings | `onClick={() => addToCart(food)}` |
+| `<a href="cart.html">` | `<Link to="/cart">` (no page reload) |
+| copy-pasted header/footer on every page | `<Header />` and `<Footer />` written once (`Layout.jsx`) |
+| `js/script.js` with 66 products | `src/data/foods.js` (unchanged data) |
+| admin.html inline `<script>` + API calls | `src/pages/admin/AdminDashboard.jsx` + localStorage |
+| `style.css` | `src/styles/style.css` — **byte-for-byte identical** |
+
+The old static site is **not deleted** — it is archived in
+[`legacy-static/`](legacy-static) so you can compare before/after and reuse its
+CSS. Your optional Express backend is still in `backend/`.
+
+---
+
+## 3. Project structure (what to show in the viva)
+
+```
+Dailo/
+├── index.html                  ← Vite entry, contains <div id="root">
+├── vite.config.js              ← Vite + React plugin
+├── vercel.json                 ← SPA rewrite so /cart works on Vercel
+├── package.json
+│
+├── src/
+│   ├── main.jsx                ← ReactDOM.createRoot(...).render(<App />)
+│   ├── App.jsx                 ← ALL routes in one place
+│   │
+│   ├── context/
+│   │   └── AppContext.jsx      ← global state: user, cart, products, orders, toasts
+│   │
+│   ├── services/               ← "business logic", no UI here
+│   │   ├── storage.js          ← small localStorage read/write helpers
+│   │   ├── authService.js      ← signup / login / logout / forgot password / users
+│   │   ├── productService.js   ← product add / edit / delete
+│   │   ├── cartService.js      ← cart add / remove / qty / totals
+│   │   └── orderService.js     ← place order / status / stats
+│   │
+│   ├── data/
+│   │   └── foods.js            ← the 66 dishes + 9 categories (from old script.js)
+│   │
+│   ├── components/
+│   │   ├── Header.jsx          ← logo, nav, cart badge, Login/Logout
+│   │   ├── Footer.jsx
+│   │   ├── Layout.jsx          ← header + <Outlet /> + footer
+│   │   ├── AuthLayout.jsx      ← header only (login/signup pages)
+│   │   ├── FoodCard.jsx        ← one product tile
+│   │   ├── ToastContainer.jsx  ← popup messages
+│   │   ├── RouteGuards.jsx     ← ProtectedRoute (user) + AdminRoute (admin)
+│   │   └── ScrollToTop.jsx
+│   │
+│   ├── pages/
+│   │   ├── Home.jsx            ← hero, categories, search, product grid
+│   │   ├── Cart.jsx            ← cart + checkout + success modal
+│   │   ├── Orders.jsx          ← my orders
+│   │   ├── Profile.jsx         ← my profile
+│   │   ├── Login.jsx
+│   │   ├── Register.jsx
+│   │   ├── ForgotPassword.jsx
+│   │   ├── NotFound.jsx        ← 404
+│   │   └── admin/
+│   │       ├── AdminLogin.jsx      ← separate admin entry
+│   │       └── AdminDashboard.jsx  ← stats · orders · foods · users
+│   │
+│   └── styles/
+│       ├── style.css           ← the ORIGINAL stylesheet, untouched
+│       └── extra.css           ← only the new bits (admin layout, status colours)
+│
+├── backend/                    ← optional Express + MongoDB API (not needed for the demo)
+├── shared/                     ← seed catalogue used by that optional backend
+├── docs/                       ← API.md, DEPLOYMENT.md, VIVA_GUIDE.md
+└── legacy-static/              ← the old HTML/CSS/JS site, archived
+```
+
+---
+
+## 4. All routes
+
+| URL | Page | Access |
+| --- | --- | --- |
+| `/` | Home (hero + 66 products + search) | public |
+| `/cart` | Cart + checkout | public (login needed to place the order) |
+| `/login` | User login | public |
+| `/register` | Signup | public |
+| `/forgot-password` | Reset password | public |
+| `/orders` | My orders | **logged-in user** |
+| `/profile` | My profile | **logged-in user** |
+| `/admin/login` | Admin login | public |
+| `/admin` | Admin dashboard | **admin only** |
+| `*` | 404 page | public |
+
+If a guest opens `/orders`, `ProtectedRoute` sends them to `/login`.
+If a customer (or a guest) opens `/admin`, `AdminRoute` sends them to `/admin/login`.
+
+---
+
+## 5. How login / signup works (localStorage)
+
+```
+Signup  →  authService.signup()  →  saves to  localStorage["fx_users"]   (array)
+Login   →  authService.login()   →  finds the matching email + password
+                                 →  saves to  localStorage["fx_session"] (object)
+Logout  →  localStorage.removeItem("fx_session")
+```
+
+localStorage keys used by the app:
+
+| Key | What it stores |
+| --- | --- |
+| `fx_foods` | product catalogue (admin can add / edit / delete) |
+| `fx_users` | all accounts (`role: "user"` or `"admin"`) |
+| `fx_session` | who is logged in right now |
+| `fx_cart` | the current cart |
+| `fx_orders` | every placed order |
+
+> ⚠️ This is a **college demo**: passwords are stored as plain text in the
+> browser, which is fine offline but never acceptable on a real site. A real
+> backend hashes them (`backend/` already does this with bcrypt).
+
+To reset the demo, open DevTools → Application → Local Storage → delete the `fx_*` keys.
+
+---
+
+## 6. Admin features
+
+* **Dashboard** — total users, foods, orders, revenue + the 5 latest orders.
+* **Orders** — filter by status, change status (`Placed → Confirmed → Preparing →
+  Out for Delivery → Delivered` or `Cancelled`), delete an order.
+* **Foods** — **Add**, **Edit** and **Delete** products; changes appear on the
+  customer Home page instantly (same localStorage list).
+* **Users** — see every customer with their order count, remove an account.
+
+---
+
+## 7. Deploy to Vercel
+
+1. Push the project to GitHub.
+2. Go to [vercel.com](https://vercel.com) → **Add New… → Project** → import the repo.
+3. Vercel detects Vite automatically:
+   * Framework preset: **Vite**
+   * Build command: `npm run build`
+   * Output directory: `dist`
+4. Click **Deploy**.
+
+`vercel.json` already adds the rewrite `/(.*) → /index.html`, which is what makes
+a direct visit to `/cart` or `/admin` work (React Router handles the path in the
+browser). No environment variables are needed.
+
+**Netlify / GitHub Pages?** Same idea — build with `npm run build`, publish
+`dist/`, and add the SPA redirect to `index.html`.
+
+---
+
+## 8. Optional backend
+
+`backend/` still contains the Express + MongoDB API from the previous version.
+Nothing in the React app calls it — the app is localStorage-only on purpose so
+that it always runs, even on Vercel without a database.
+
+```bash
+cd backend
+npm install
+cp .env.example .env     # set MONGO_URI + JWT_SECRET
+npm run seed
+npm start                # http://localhost:5000/api/health
+```
+
+---
+
+## 9. Scripts
 
 | Command | What it does |
 | --- | --- |
-| `npm start` / `npm run serve` | dependency-free dev server on `0.0.0.0:4173` with `/api` proxy |
-| `npm run build:pages` | regenerate the 27 root HTML pages from `src/pages/` + `tools/pages.json` |
-| `npm run audit` | fail if any page references an `FX.*` member that does not exist |
-| `npm run check` | `node --check` across all JS |
-| `npm test` | 81 tests (frontend + backend) |
-| `npm run verify` | build → check → audit → test |
-| `npm run backend` | start the API (requires `MONGO_URI`, `JWT_SECRET`) |
-| `npm run api:nodb` | start the API without MongoDB (seeded fallbacks + honest 503s) |
-| `npm run seed` | seed MongoDB from `shared/` |
+| `npm run dev` | start Vite dev server with hot reload |
+| `npm run build` | production build into `dist/` |
+| `npm run preview` | preview the production build locally |
+| `cd backend && npm start` | run the optional API |
 
 ---
 
-## Testing
+## 10. More docs
 
-```bash
-npm test            # 81 tests, Node's built-in runner; jsdom is the only dev dependency
-```
-
-- **`tests/dom-smoke.test.js`** — boots all 27 pages in jsdom with scripts enabled:
-  no script errors, chrome present/absent per contract, mounts populated, no
-  `undefined` / `[object Object]` / `NaN` in rendered text, route guards verified for
-  guests and seeded sessions, every admin section clickable, and every internal link
-  and asset reference resolving to a real file.
-- **`tests/flows.test.js`** — the acceptance flows: add-to-cart quantity semantics,
-  the ₹150 threshold at ₹80/₹120/₹149/₹150/₹200 (and after changing it), restaurant
-  fees and minimums, coupon eligibility and rejection reasons, single-fulfilment-cart
-  rule, guest→account merge without duplicated quantities, wishlist persistence,
-  typo-tolerant search, order placement (pricing, stock, notifications, duplicate
-  refusal), cancellation (stock restore, simulated refund), reorder, admin override
-  layer, auth validation and password reset, and city coverage honesty.
-- **`backend/tests/services.test.js`** — validators, bcrypt hashing, lockout, JWTs,
-  payment policy, settings resolution and per-city overrides, **frontend/backend
-  pricing parity**, model validation, and the order state machine.
-- **`backend/tests/api.test.js`** — the HTTP contract on a real Express app: health
-  honesty, seeded catalogue fallbacks, filtering/sorting/pagination, `503` where
-  persistence is required, `401` on every admin route, malformed tokens, 404
-  envelope, oversized bodies, no `x-powered-by`.
-
-Details and how to extend: [`docs/TESTING.md`](docs/TESTING.md).
-
----
-
-## Backend & environment
-
-Express 4 + Mongoose 8, JWT + bcryptjs, helmet, CORS allow-list, rate limiting.
-Required variables: **`MONGO_URI`**, **`JWT_SECRET`**; everything else is optional
-and documented in [`backend/.env.example`](backend/.env.example). The server refuses
-to start with a missing secret, a short production secret, or demo seeding enabled in
-production.
-
-Endpoints are listed in [`docs/API.md`](docs/API.md) and match
-`js/backend-integration.js` one-for-one, so switching modes needs no client changes.
-
-Enforcement lives on the server: role checks on every privileged route, prices and
-totals recomputed from the database, coupon eligibility re-checked with per-user
-usage, city serviceability re-validated at checkout, atomic stock decrements with
-`INSUFFICIENT_STOCK`, idempotent order creation, forward-only status transitions,
-password hashing and lockout, hashed expiring reset codes, and rate limiting.
-
----
-
-## Documentation
-
-| Document | Contents |
-| --- | --- |
-| [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) | layers, module map, page contract, boot order, data modes, money conventions |
-| [`docs/API.md`](docs/API.md) | every endpoint, payloads, error codes, rate limits, unimplemented capabilities |
-| [`docs/DATA_MODEL.md`](docs/DATA_MODEL.md) | collections, fields, indexes, browser records, status vocabularies |
-| [`docs/ADMIN_GUIDE.md`](docs/ADMIN_GUIDE.md) | each dashboard section, what it changes, where edits are stored |
-| [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md) | local run, environment variables, payments, production checklist |
-| [`docs/TESTING.md`](docs/TESTING.md) | what is covered and how to add tests |
-| [`docs/COMPONENTS.md`](docs/COMPONENTS.md) | reusable component inventory, design tokens, accessibility conventions |
-| [`docs/SIMULATION_AND_HONESTY.md`](docs/SIMULATION_AND_HONESTY.md) | real vs simulated, and how to make each simulation real |
-
----
-
-## Security notes
-
-- No secret, key or service-account file is committed; `backend/.env` is git-ignored and `.env.example` documents the names only.
-- Passwords are bcrypt-hashed server-side (salted SHA-256 in the local demo profile). No API stores or returns a plain-text password, and `toPublic()` strips hashes.
-- Roles are enforced on the trusted layer (`protect` + `requireRole`); hiding the admin button is a UX detail, not a control.
-- Client-sent prices are never trusted: line prices, add-on prices, discounts, fees and totals are recomputed from the catalogue and the shared engine.
-- Rate limiting on all API traffic, tighter on auth and write routes; account lockout after repeated failures; reset codes hashed and expiring.
-- Helmet, CORS allow-list, JSON body size limits, no stack traces in responses, `noindex` on generated pages.
-- Payments require server-side gateway verification before an order can be marked paid; until that exists, online methods are refused rather than faked.
-
----
-
-*Food Express is an original brand and codebase. Its UX patterns (quick-commerce home
-rails, restaurant menus, multi-step checkout) are inspired by mainstream Indian
-delivery apps; all copy, data, design tokens and code here are original.*
+* [`docs/VIVA_GUIDE.md`](docs/VIVA_GUIDE.md) — every question your examiner may
+  ask, with short answers and file names to point at.
+* [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md) — Vercel / Netlify / backend setup.
+* [`docs/API.md`](docs/API.md) — endpoints of the optional backend.

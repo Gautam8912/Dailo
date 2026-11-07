@@ -13,16 +13,17 @@ backend/.env.*
 *.key
 serviceAccountKey*.json
 
-# Logs & temp
+# Build output (Vercel builds this itself)
+dist/
+dist-ssr/
+.vite/
+*.local
+
+# Logs
 *.log
 npm-debug.log*
 .DS_Store
 Thumbs.db
-/tmp/
-
-# Build output that is not part of the deliverable
-coverage/
-.nyc_output/
 
 # Editor
 .idea/
