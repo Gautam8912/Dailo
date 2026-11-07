@@ -7,7 +7,15 @@ running the platform — sharing one seeded demo dataset in the browser.
 ```bash
 cd jobtracker
 npm install
-npm run dev      # http://localhost:5173
+npm run dev          # dev server  → http://localhost:5173
+```
+
+**Already built?** The `dist/` folder in this zip is a production build. To try it with
+**no install at all** (Node 18+ only):
+
+```bash
+cd jobtracker
+npm run serve:dist   # → http://localhost:4173  (zero dependencies)
 ```
 
 No backend, no API keys, no setup. Everything is seeded in memory and persisted to
@@ -111,7 +119,8 @@ src/
 |-----------------|-------------------------------------------|
 | `npm run dev`   | Vite dev server on `0.0.0.0:5173`         |
 | `npm run build` | Production build into `dist/`             |
-| `npm run preview` | Serve the production build on `:4173`   |
+| `npm run preview` | Serve the build with Vite on `:4173`    |
+| `npm run serve:dist` | Zero-dependency static server for `dist/` (SPA fallback) |
 | `npm run test:e2e` | Playwright end-to-end suite            |
 | `npm run qa:render` | Headless route smoke test (jsdom)      |
 
@@ -125,6 +134,22 @@ Two layers, both runnable offline after install:
   mobile sidebar. Run `npx playwright install chromium` once first.
 - **`npm run qa:render`** — bundles the app with esbuild and mounts all 18 routes in
   jsdom for user, admin and empty-workspace sessions; fails on any React console error.
+
+## What is in this zip
+
+```
+jobtracker/
+  src/           all React source (pages, layouts, components, lib)
+  tests/         Playwright e2e suite
+  qa/            jsdom route smoke test (build-free)
+  tools/         serve.mjs — zero-dependency static server
+  dist/          pre-built production bundle (ready to serve)
+  package.json / package-lock.json / vite.config.js / playwright.config.js
+  README.md
+```
+
+`node_modules` is intentionally **not** included — run `npm install` once (or skip it
+entirely and use the pre-built `dist/` via `npm run serve:dist`).
 
 ## Honest notes
 

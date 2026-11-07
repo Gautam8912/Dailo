@@ -30,4 +30,4 @@ coverage/
 *.swp
 
 # Downloadable build artifact (generated, not part of the source tree)
-/hiretrail-job-tracker.zip
+/hiretrail-job-tracker*.zip
